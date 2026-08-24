@@ -35,7 +35,6 @@ import java.util.regex.Pattern;
 public final class BedrockMenuBridge extends JavaPlugin implements Listener {
     private List<Pattern> includeTitles;
     private List<Pattern> excludeTitles;
-    private boolean virtualMenusOnly;
     private Map<String, String> iconOverrides;
     private final Set<java.util.UUID> replaying = new HashSet<>();
 
@@ -48,7 +47,6 @@ public final class BedrockMenuBridge extends JavaPlugin implements Listener {
 
     private void reloadSettings() {
         reloadConfig();
-        virtualMenusOnly = getConfig().getBoolean("virtual-menus-only", true);
         includeTitles = patterns(getConfig().getStringList("include-titles"));
         excludeTitles = patterns(getConfig().getStringList("exclude-titles"));
         iconOverrides = getConfig().getConfigurationSection("icon-overrides") == null
@@ -62,7 +60,6 @@ public final class BedrockMenuBridge extends JavaPlugin implements Listener {
         if (replaying.contains(player.getUniqueId())) return;
         Inventory top = event.getView().getTopInventory();
         if (top.getType() == InventoryType.CRAFTING || top.getType() == InventoryType.PLAYER) return;
-        if (virtualMenusOnly && top.getLocation() != null) return;
 
         String title = plain(event.getView().getTitle());
         if (!matches(includeTitles, title) || matches(excludeTitles, title)) return;
