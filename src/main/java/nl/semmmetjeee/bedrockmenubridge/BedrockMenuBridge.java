@@ -85,16 +85,11 @@ public final class BedrockMenuBridge extends JavaPlugin implements Listener {
         for (MenuButton button : buttons) {
             form.button(button.label(), FormImage.Type.PATH, texturePath(button.item().getType()));
         }
-        form.responseHandler((ignoredForm, responseData) -> {
-            if (responseData == null || responseData.equals("null")) return;
-            try {
-                int chosen = Integer.parseInt(responseData);
-                if (chosen >= 0 && chosen < buttons.size()) {
-                    MenuButton selected = buttons.get(chosen);
-                    Bukkit.getScheduler().runTask(this, () -> replayClick(player, inventory, selected.slot()));
-                }
-            } catch (NumberFormatException ignored) {
-                getLogger().fine("Ignored malformed Bedrock form response: " + responseData);
+        form.validResultHandler(response -> {
+            int chosen = response.clickedButtonId();
+            if (chosen >= 0 && chosen < buttons.size()) {
+                MenuButton selected = buttons.get(chosen);
+                Bukkit.getScheduler().runTask(this, () -> replayClick(player, inventory, selected.slot()));
             }
         });
         FloodgateApi.getInstance().sendForm(player.getUniqueId(), form.build());
