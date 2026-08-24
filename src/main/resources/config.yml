@@ -1,6 +1,3 @@
-# Only virtual inventories are converted by default. Physical containers are left alone.
-virtual-menus-only: true
-
 # Regex filters, matched against the plain menu title. Keep include as '.*' to convert
 # every virtual plugin menu, including DeluxeMenus. Put a title here to skip it.
 include-titles:
